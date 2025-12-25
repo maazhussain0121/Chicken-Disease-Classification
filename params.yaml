@@ -1,0 +1,10 @@
+# Model parameters
+IMAGE_SIZE: [224, 224, 3]
+BATCH_SIZE: 16
+INCLUDE_TOP: False
+EPOCHS: 1
+CLASSES: 2
+
+# Training parameters
+LEARNING_RATE: 0.01
+AUGMENTATION: True
