@@ -7,10 +7,12 @@ notebook
 dvc
 python-box==6.0.2
 pyYAML
+pathlib
 tqdm
 joblib
 types-pyYAML
 scipy 
 Flask
 Flask-Cors
+certifi
 -e.

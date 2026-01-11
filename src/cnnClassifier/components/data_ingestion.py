@@ -1,7 +1,9 @@
 import os
+import ssl
 from pathlib import Path
 import urllib.request as request
 import zipfile
+import certifi
 from cnnClassifier import logger
 from cnnClassifier.entity.config_entity import DataIngestionConfig
 from cnnClassifier.utils.common import get_size
@@ -13,6 +15,12 @@ class DataIngestion:
 
     def download_file(self):
         if not os.path.exists(self.config.local_data_file):
+            # Create SSL context with certifi certificates and install it
+            ssl_context = ssl.create_default_context(cafile=certifi.where())
+            https_handler = request.HTTPSHandler(context=ssl_context)
+            opener = request.build_opener(https_handler)
+            request.install_opener(opener)
+            
             filename, headers = request.urlretrieve(
                 url = self.config.source_URL,
                 filename = self.config.local_data_file
