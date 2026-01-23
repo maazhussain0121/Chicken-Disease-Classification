@@ -12,6 +12,7 @@ tqdm
 joblib
 types-pyYAML
 scipy 
+scikit-learn
 Flask
 Flask-Cors
 certifi
