@@ -4,11 +4,18 @@ from pathlib import Path
 
 class Training:
     def __init__(self, config: TrainingConfig):
-        self.comfig = config
+        self.config = config
 
     def get_base_model(self):
         self.model = tf.keras.models.load_model(
             self.config.updated_base_model_path
+        )
+        
+        # Re-compile to ensure eager execution compatibility
+        self.model.compile(
+            optimizer = tf.keras.optimizers.SGD(learning_rate = 0.01),
+            loss = tf.keras.losses.CategoricalCrossentropy(),
+            metrics = ["accuracy"]
         )
 
     def train_valid_generator(self):
@@ -18,7 +25,7 @@ class Training:
         )
 
         dataflow_kwargs = dict(
-            target_size = self.config.params_image_size[:1],
+            target_size = self.config.params_image_size[:2],
             batch_size = self.config.params_batch_size,
             interpolation = "bilinear"
         )
@@ -55,7 +62,7 @@ class Training:
         )
 
     @staticmethod
-    def save_method(path: Path, model: tf.keras.Model):
+    def save_model(path: Path, model: tf.keras.Model):
         model.save(path)
 
     def train(self, callback_list: list):
@@ -64,7 +71,7 @@ class Training:
 
         self.model.fit(
             self.train_generator,
-            epochs = self.comfig.params_epochs,
+            epochs = self.config.params_epochs,
             steps_per_epoch = self.steps_per_epoch,
             validation_steps = self.validation_steps,
             validation_data = self.valid_generator,
